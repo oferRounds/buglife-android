@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import android.os.Build;
+
 
 public class SubmitReportLegacyService extends IntentService {
     private static final String KEY_EXTRA_REPORT_PATH = "report_path";
@@ -50,12 +52,20 @@ public class SubmitReportLegacyService extends IntentService {
     public static void start(Context context, File jsonReportFile) {
         Intent intent = new Intent(context, SubmitReportLegacyService.class);
         intent.putExtra(KEY_EXTRA_REPORT_PATH, jsonReportFile.getAbsolutePath());
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, SubmitReportLegacyService.class);
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     public SubmitReportLegacyService() {
